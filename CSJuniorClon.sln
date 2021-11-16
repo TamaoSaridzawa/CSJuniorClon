@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSJuniorClon", "CSJuniorClon\CSJuniorClon.csproj", "{AAEC9740-3E01-4FBC-AE93-9A0CCD6E29A5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections", "Collections", "{B5EA8C7B-053E-4653-A8D3-C0C2BAFE0AB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExplanatoryDictionary", "ExplanatoryDictionary\ExplanatoryDictionary.csproj", "{5D929E3B-BF3F-4ABF-A117-A63359520C05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,16 @@ Global
 		{AAEC9740-3E01-4FBC-AE93-9A0CCD6E29A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAEC9740-3E01-4FBC-AE93-9A0CCD6E29A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAEC9740-3E01-4FBC-AE93-9A0CCD6E29A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D929E3B-BF3F-4ABF-A117-A63359520C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D929E3B-BF3F-4ABF-A117-A63359520C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D929E3B-BF3F-4ABF-A117-A63359520C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D929E3B-BF3F-4ABF-A117-A63359520C05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5D929E3B-BF3F-4ABF-A117-A63359520C05} = {B5EA8C7B-053E-4653-A8D3-C0C2BAFE0AB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6633BB6-C186-4F6D-A4DD-E73AA04875DB}
