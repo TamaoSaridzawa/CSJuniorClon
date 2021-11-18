@@ -10,18 +10,17 @@ namespace WorkingProperties
     {
         static void Main(string[] args)
         {
-            char symbol = '%';
-            Player player = new Player(1, 5);
+            Renderer player = new Renderer(new Player(2, 4, '@'));
 
-            player.DrawPlayer(symbol);
+            player.Draw();
 
-            Player player1 = new Player(player.PositionX + 1, player.PositionY);
+            Renderer player1 = new Renderer(new Player (5, 1, '!'));
 
-            player1.DrawPlayer(symbol);
+            player1.Draw();
 
             player.ChangePosition();
 
-            player.DrawPlayer(symbol);
+            player.Draw();
 
             Console.ReadKey();
         }
@@ -29,28 +28,49 @@ namespace WorkingProperties
 
     class Player
     {
-        public int PositionX { get; private set; }
-        public int PositionY { get; private set; }
+        public int PositionX { get; set; }
+        public int PositionY { get; set; }
+        public char Symbol { get; set ; }
 
-        public Player(int positionX, int positionY)
+        public Player(int positionX, int positionY, char symbol)
         {
             PositionX = positionX;
             PositionY = positionY;
+            Symbol = symbol;
+        }
+    }
+
+    class Renderer
+    {
+        public Player Player { get; private set; }
+
+        public Renderer(Player player)
+        {
+            Player = player;
         }
 
-        public void DrawPlayer(char symbol)
+        public void Draw()
         {
-            Console.SetCursorPosition(PositionY,PositionX);
-            Console.WriteLine(symbol);
+            Console.SetCursorPosition(Player.PositionY,Player.PositionX);
+            Console.WriteLine(Player.Symbol);
         }
 
         public void ChangePosition()
         {
-            Console.WriteLine("Введите позицию для координаты X");
-            PositionX = int.Parse(Console.ReadLine());
+            int number1;
+            int number2;
 
-            Console.WriteLine("Введите позицию для координаты Y");
-            PositionY = int.Parse(Console.ReadLine());
+            Console.WriteLine("Введите позицию для координаты X и Y");
+
+            if (int.TryParse(Console.ReadLine(), out number1) && int.TryParse(Console.ReadLine(), out number2))
+            {
+                Player.PositionX = number1;
+                Player.PositionY = number2;
+            }
+            else
+            {
+                Console.WriteLine("Введены некорректные данные");
+            }
         }
     }
 }
