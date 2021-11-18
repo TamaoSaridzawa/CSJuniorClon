@@ -10,7 +10,7 @@ namespace MapPersonnelAccounting
     {
         static void Main(string[] args)
         {
-            Dictionary<int,string> dosier = new Dictionary<int, string>();
+            Dictionary<int,string> dosiers = new Dictionary<int, string>();
             string userInput = "";
             int serialNumber = 1;
 
@@ -26,13 +26,13 @@ namespace MapPersonnelAccounting
                 switch (userInput)
                 {
                     case "1":
-                        AddDosier(ref dosier, ref serialNumber);
+                        AddDosier(dosiers, ref serialNumber);
                         break;
                     case "2":
-                        OutputDossier(dosier);
+                        OutputAllDossier(dosiers);
                         break;
                     case "3":
-                        RemoveDosier(ref dosier);
+                        RemoveDosier(dosiers);
                         break;
                     case "4":
                         break;
@@ -45,26 +45,25 @@ namespace MapPersonnelAccounting
             Console.ReadKey();
         }
 
-        static void AddDosier(ref Dictionary<int, string> dosier, ref int serialNumber)
+        static void AddDosier(Dictionary<int, string> dosiers, ref int serialNumber)
         {
             Console.Write("Введите инициалы и должность :");
             string inputInitial = Console.ReadLine();
 
-            dosier.Add(serialNumber++, inputInitial);   
+            dosiers.Add(serialNumber++, inputInitial);   
 
             Console.WriteLine("Пользователь добавлен!");
-
         }
 
-        static void OutputDossier(Dictionary<int, string> dosier)
+        static void OutputAllDossier(Dictionary<int, string> dosiers)
         {
-            foreach (var item in dosier)
+            foreach (var item in dosiers)
             {
                 Console.WriteLine($"Порядковый номер - {item.Key}, Досье - {item.Value}");
             }
         }
 
-        static void RemoveDosier(ref Dictionary<int, string> dosier)
+        static void RemoveDosier(Dictionary<int, string> dosiers)
         {
             int number;
 
@@ -73,9 +72,9 @@ namespace MapPersonnelAccounting
 
             if (int.TryParse(index, out number))
             {
-                if (dosier.ContainsKey(number))
+                if (dosiers.ContainsKey(number))
                 {
-                    dosier.Remove(number);
+                    dosiers.Remove(number);
 
                     Console.WriteLine("Пользователь удален");
                 }
