@@ -17,6 +17,7 @@ namespace WorkingProperties
             Player player1 = new Player(2, 9, '!');
 
             renderer.Draw(player.X, player.Y, player.Symbol);
+
             renderer.Draw(player1.X, player1.Y, player1.Symbol);
 
             player.ChangeСoordinates();
@@ -61,13 +62,10 @@ namespace WorkingProperties
 
     class Renderer
     {
-
         public void Draw(int x, int y, char symbol)
         {
             Console.SetCursorPosition(y,x);
             Console.WriteLine(symbol);
         }
-
-       
     }
 }
