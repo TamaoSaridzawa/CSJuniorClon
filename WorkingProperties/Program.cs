@@ -10,17 +10,18 @@ namespace WorkingProperties
     {
         static void Main(string[] args)
         {
-            Renderer player = new Renderer(new Player(2, 4, '@'));
+            Renderer renderer = new Renderer();
 
-            player.Draw();
+            Player player = new Player(1, 9, '@') ;
 
-            Renderer player1 = new Renderer(new Player (5, 1, '!'));
+            Player player1 = new Player(2, 9, '!');
 
-            player1.Draw();
+            renderer.Draw(player.X, player.Y, player.Symbol);
+            renderer.Draw(player1.X, player1.Y, player1.Symbol);
 
-            player.ChangePosition();
+            player.ChangeСoordinates();
 
-            player.Draw();
+            renderer.Draw(player.X, player.Y, player.Symbol);
 
             Console.ReadKey();
         }
@@ -28,34 +29,18 @@ namespace WorkingProperties
 
     class Player
     {
-        public int PositionX { get; set; }
-        public int PositionY { get; set; }
-        public char Symbol { get; set ; }
+        public int X { get; private set; }
+        public int Y { get; private set; }
+        public char Symbol { get; private set ; }
 
-        public Player(int positionX, int positionY, char symbol)
+        public Player(int x, int y, char symbol)
         {
-            PositionX = positionX;
-            PositionY = positionY;
+            X = x;
+            Y = y;
             Symbol = symbol;
         }
-    }
 
-    class Renderer
-    {
-        public Player Player { get; private set; }
-
-        public Renderer(Player player)
-        {
-            Player = player;
-        }
-
-        public void Draw()
-        {
-            Console.SetCursorPosition(Player.PositionY,Player.PositionX);
-            Console.WriteLine(Player.Symbol);
-        }
-
-        public void ChangePosition()
+        public void ChangeСoordinates()
         {
             int number1;
             int number2;
@@ -64,13 +49,25 @@ namespace WorkingProperties
 
             if (int.TryParse(Console.ReadLine(), out number1) && int.TryParse(Console.ReadLine(), out number2))
             {
-                Player.PositionX = number1;
-                Player.PositionY = number2;
+                X = number1;
+                Y = number2;
             }
             else
             {
                 Console.WriteLine("Введены некорректные данные");
             }
         }
+    }
+
+    class Renderer
+    {
+
+        public void Draw(int x, int y, char symbol)
+        {
+            Console.SetCursorPosition(y,x);
+            Console.WriteLine(symbol);
+        }
+
+       
     }
 }
