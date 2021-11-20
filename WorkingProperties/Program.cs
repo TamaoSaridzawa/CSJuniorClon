@@ -16,13 +16,13 @@ namespace WorkingProperties
 
             Player player1 = new Player(2, 9, '!');
 
-            renderer.Draw(player.X, player.Y, player.Symbol);
+            renderer.Draw(player.PositionX, player.PositionY, player.Symbol);
 
-            renderer.Draw(player1.X, player1.Y, player1.Symbol);
+            renderer.Draw(player1.PositionX, player1.PositionY, player1.Symbol);
 
             player.ChangeСoordinates();
 
-            renderer.Draw(player.X, player.Y, player.Symbol);
+            renderer.Draw(player.PositionX, player.PositionY, player.Symbol);
 
             Console.ReadKey();
         }
@@ -30,14 +30,14 @@ namespace WorkingProperties
 
     class Player
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public int PositionX { get; private set; }
+        public int PositionY { get; private set; }
         public char Symbol { get; private set ; }
 
         public Player(int x, int y, char symbol)
         {
-            X = x;
-            Y = y;
+            PositionX = x;
+            PositionY = y;
             Symbol = symbol;
         }
 
@@ -50,8 +50,8 @@ namespace WorkingProperties
 
             if (int.TryParse(Console.ReadLine(), out number1) && int.TryParse(Console.ReadLine(), out number2))
             {
-                X = number1;
-                Y = number2;
+                PositionX = number1;
+                PositionY = number2;
             }
             else
             {
