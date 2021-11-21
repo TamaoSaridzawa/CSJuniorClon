@@ -13,7 +13,8 @@ namespace PlayerDatabase
             int counteNumber = 1;
             bool operationDatabase = true;
             DataBase dataBase = new DataBase();
-            Console.WriteLine("Для добавления нового игрока нажмите '1'\nДля блокировки игрока нажмите '2'\nДля разблокировки игрока нажмите '3'\n Для вывода информации о игроках нажмите '4'\nДля выхода нажмите '5'");
+            Console.WriteLine("Для добавления нового игрока нажмите '1'\nДля блокировки игрока нажмите '2'\nДля разблокировки игрока нажмите '3'" +
+                "\nДля вывода информации о игроках нажмите '4'\nДля улаоение игрока нажмите '5'\nДля выхода нажмите '6'");
 
             while (operationDatabase)
             {
@@ -35,6 +36,9 @@ namespace PlayerDatabase
                         dataBase.ShowInfo();
                         break;
                     case "5":
+                        dataBase.Remove();
+                        break;
+                    case "6":
                         operationDatabase = false;
                         break;
                     default:
@@ -56,7 +60,7 @@ namespace PlayerDatabase
         {
             SerialNumber = serialNumber;
 
-            Console.WriteLine("Введите имя персонажа");
+            Console.Write("Введите имя персонажа :");
             Name = Console.ReadLine();
             Level = 1;
             _banned = false;
@@ -91,8 +95,18 @@ namespace PlayerDatabase
         {
             if (Convert(ref _number))
             {
-                Players[_number - 1].Banned = true;
-                Console.WriteLine($"Персонаж заблокирован");
+                foreach (var player in Players)
+                {
+                    if (_number == player.SerialNumber)
+                    {
+                        player.Banned = true;
+                        Console.WriteLine($"Персонаж заблокирован");
+                    }
+                    else
+                    {
+                        OutputMessage();
+                    }
+                }
             }
         }
 
@@ -100,8 +114,37 @@ namespace PlayerDatabase
         {
             if (Convert(ref _number))
             {
-                Players[_number - 1].Banned = false;
-                Console.WriteLine("Персонаж разблокирован");
+                foreach (var player in Players)
+                {
+                    if (_number == player.SerialNumber)
+                    {
+                        player.Banned = false;
+                        Console.WriteLine("Персонаж разблокирован");
+                    }
+                    else
+                    {
+                        OutputMessage();
+                    }
+                }
+            }
+        }
+
+        public void Remove()
+        {
+            if (Convert(ref _number))
+            {
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (_number == Players[i].SerialNumber)
+                    {
+                        Players.RemoveAt(i);
+                        Console.WriteLine("Игрок удален");
+                    }
+                    else
+                    {
+                        OutputMessage();
+                    }
+                }
             }
         }
 
@@ -117,7 +160,7 @@ namespace PlayerDatabase
         {
             Console.Write("Введите порядковый номер :");
 
-            if (int.TryParse(Console.ReadLine(), out _number) && _number > 0 && _number <= Players.Count)
+            if (int.TryParse(Console.ReadLine(), out _number) && _number > 0)
             {
                 return true;
             }
@@ -126,6 +169,11 @@ namespace PlayerDatabase
                 Console.WriteLine("Введены некорректные данные!");
                 return false;
             }
+        }
+
+        public void OutputMessage()
+        {
+            Console.WriteLine("Игрока с таким номером не существует");
         }
     }
 }
