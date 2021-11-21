@@ -64,7 +64,7 @@ namespace WorkingProperties
     {
         public void Draw(int x, int y, char symbol)
         {
-            Console.SetCursorPosition(y,x);
+            Console.SetCursorPosition(x, y);
             Console.WriteLine(symbol);
         }
     }
