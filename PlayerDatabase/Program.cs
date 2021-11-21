@@ -24,7 +24,7 @@ namespace PlayerDatabase
                 switch (userInput)
                 {
                     case "1":
-                        dataBase.Add();
+                        dataBase.AddPlayer();
                         break;
                     case "2":
                         dataBase.BanPlayer();
@@ -53,22 +53,11 @@ namespace PlayerDatabase
     {
         public static int CounteNumber;
 
+        private bool _banned;
         public int SerialNumber { get; private set; }
         public string Name { get; private set; }
         public int Level { get; private set; }
-        private bool _banned;
-
-        public bool Banned
-        {
-            get
-            {
-                return _banned;
-            }
-            set
-            {
-                _banned = value;
-            }
-        }
+       
 
         public Player()
         {
@@ -79,17 +68,32 @@ namespace PlayerDatabase
             Level = 1;
             _banned = false;
         }
+
+        public void SetBannedTrue()
+        {
+            _banned = true;
+        }
+
+        public void SetBannedFalse()
+        {
+            _banned = false;
+        }
+
+        public bool GetBanned()
+        {
+            return _banned;
+        }
     }
 
     class Database
     {
         private List<Player> _players = new List<Player>();
 
-        int number;
+        private int _number;
 
-        Player player;
+        private Player _player;
 
-        public void Add()
+        public void AddPlayer()
         {
             _players.Add(new Player());
             Console.WriteLine("Пользователь добавлен.");
@@ -97,48 +101,48 @@ namespace PlayerDatabase
 
         public void BanPlayer()
         {
-            if (TryReadInt(out number))
+            if (TryReadInt(out _number))
             {
-                if (TryGetPlayer(out player))
+                if (TryGetPlayer(out _player))
                 {
-                    player.Banned = true;
+                    _player.SetBannedTrue();
                     Console.WriteLine($"Персонаж заблокирован");
                 }
                 else
                 {
-                    InputMessage();
+                    InputErrorMessage();
                 }
             }
         }
 
         public void UnBanPlayer()
         {
-            if (TryReadInt(out number))
+            if (TryReadInt(out _number))
             {
-                if (TryGetPlayer(out player))
+                if (TryGetPlayer(out _player))
                 {
-                    player.Banned = false;
+                    _player.SetBannedFalse();
                     Console.WriteLine("Персонаж разблокирован");
                 }
                 else
                 {
-                    InputMessage();
+                    InputErrorMessage();
                 }
             }
         }
 
         public void RemovePlayer()
         {
-            if (TryReadInt(out number))
+            if (TryReadInt(out _number))
             {
-                if (TryGetPlayer(out player))
+                if (TryGetPlayer(out _player))
                 {
-                    _players.Remove(player);
+                    _players.Remove(_player);
                     Console.WriteLine("Игрок удален");
                 }
                 else
                 {
-                    InputMessage();
+                    InputErrorMessage();
                 }
             }
         }
@@ -147,11 +151,11 @@ namespace PlayerDatabase
         {
             foreach (var player in _players)
             {
-                Console.WriteLine($"Порядковый номер - {player.SerialNumber}; Имя - {player.Name}; Уровень - {player.Level}; Блокировка - {player.Banned}");
+                Console.WriteLine($"Порядковый номер - {player.SerialNumber}; Имя - {player.Name}; Уровень - {player.Level}; Блокировка - {player.GetBanned()}");
             }
         }
 
-        public bool TryReadInt(out int number)
+        private bool TryReadInt(out int number)
         {
             Console.Write("Введите порядковый номер :");
 
@@ -170,7 +174,7 @@ namespace PlayerDatabase
         {
             for (int i = 0; i < _players.Count; i++)
             {
-                if (_players[i].SerialNumber == number)
+                if (_players[i].SerialNumber == _number)
                 {
                     player = _players[i];
                     return true;
@@ -180,7 +184,7 @@ namespace PlayerDatabase
             return false;
         }
 
-        private void InputMessage()
+        private void InputErrorMessage()
         {
             Console.WriteLine("Не существует игрока с таким номером");
         }
