@@ -102,10 +102,6 @@ namespace PlayerDatabase
                         player.Banned = true;
                         Console.WriteLine($"Персонаж заблокирован");
                     }
-                    else
-                    {
-                        OutputMessage();
-                    }
                 }
             }
         }
@@ -121,10 +117,6 @@ namespace PlayerDatabase
                         player.Banned = false;
                         Console.WriteLine("Персонаж разблокирован");
                     }
-                    else
-                    {
-                        OutputMessage();
-                    }
                 }
             }
         }
@@ -139,10 +131,6 @@ namespace PlayerDatabase
                     {
                         Players.RemoveAt(i);
                         Console.WriteLine("Игрок удален");
-                    }
-                    else
-                    {
-                        OutputMessage();
                     }
                 }
             }
@@ -169,11 +157,6 @@ namespace PlayerDatabase
                 Console.WriteLine("Введены некорректные данные!");
                 return false;
             }
-        }
-
-        public void OutputMessage()
-        {
-            Console.WriteLine("Игрока с таким номером не существует");
         }
     }
 }
