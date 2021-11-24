@@ -11,7 +11,7 @@ namespace Shop
         static void Main(string[] args)
         {
             Player player = new Player("Job", 1400);
-            Seller seller = new Seller();
+            Seller seller = new Seller(0);
             bool isDeal = true;
 
             Console.WriteLine("Нажмите :");
@@ -31,7 +31,7 @@ namespace Shop
                         seller.ShowItems();
                         break;
                     case "3":
-                        seller.Sell(ref player);
+                        seller.Sell(player);
                         break;
                     case "4":
                         isDeal = false;
@@ -44,46 +44,51 @@ namespace Shop
         }
     }
 
-    class Product
+    abstract class Character
+    {
+        protected List<Item> Items = new List<Item>();
+        public int Money { get;  set; }
+
+        public Character(int money)
+        {
+            Money = money;
+        }
+
+        abstract public void ShowItems();
+    }
+
+    class Item
     {
         public string Name { get; private set; }
         public int Price { get; private set; }
 
-        public Product(string name, int price)
+        public Item(string name, int price)
         {
             Name = name;
             Price = price;
         }
     }
 
-    class Player : Inform
+    class Player : Character
     {
-        private List<Product> _items = new List<Product>();
-
         public string Name { get; private set; }
-        public int Money { get; private set; }
 
-        public Player(string name, int money) 
+        public Player( string name, int money) : base (money) 
         {
             Name = name;
-            Money = money;
         }
 
-        public void Pay(int price)
+        public void Bay(int price, Item item)
         {
             Money -= price;
+            Items.Add(item);
         }
 
-        public void PickItem(Product product)
-        {
-            _items.Add(product);
-        }
-
-        public void ShowItems()
+        override public void  ShowItems()
         {
             Console.WriteLine($"Денег в кармане - {Money}");
 
-            if (_items.Count <= 0)
+            if (Items.Count <= 0)
             {
                 Console.WriteLine("В рюкзаке пусто ^_^");
             }
@@ -91,7 +96,7 @@ namespace Shop
             {
                 Console.WriteLine("Вещи в рюкзаке:");
 
-                foreach (var item in _items)
+                foreach (var item in Items)
                 {
                     Console.WriteLine($"{item.Name}");
                 }
@@ -99,31 +104,29 @@ namespace Shop
         }
     }
 
-    class Seller : Inform
+    class Seller : Character
     {
-        private List<Product> _products = new List<Product>();
-
-        public Seller()
+        public Seller(int money) : base(money)
         {
-            ExposeProducts();
+            ExposeItems();
         }
 
-        public void Sell(ref Player player)
+        public void Sell(Player player)
         {
             Console.Write("Какой товар вам продать? ");
             string userInput = Console.ReadLine();
 
-            if (FindProduct(userInput, out Product product))
+            if (FindItem(userInput, out Item item))
             {
-                if (player.Money >= product.Price)
+                if (player.Money >= item.Price)
                 {
-                    player.Pay(product.Price);
+                    player.Bay(item.Price, item);
 
-                    player.PickItem(product);
+                    Money += item.Price;
 
                     Console.WriteLine("Поздравляю с покупкой!");
 
-                    _products.Remove(product);
+                    Items.Remove(item);
                 }
                 else
                 {
@@ -136,13 +139,15 @@ namespace Shop
             }
         }
 
-        public void ShowItems()
+        override public void ShowItems()
         {
-            if (_products.Count > 0)
+            Console.WriteLine($"Денежные средства магазина :{Money}");
+
+            if (Items.Count > 0)
             {
                 Console.WriteLine("Сейчас у продавца есть следуюшие товары.");
 
-                foreach (var item in _products)
+                foreach (var item in Items)
                 {
                     Console.WriteLine($"{item.Name}, цена - {item.Price}");
                 }
@@ -153,34 +158,30 @@ namespace Shop
             }
         }
 
-        private bool FindProduct(string userInput, out Product product)
+        private bool FindItem(string userInput, out Item item)
         {
-            for (int i = 0; i < _products.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                if (userInput.ToLower() == _products[i].Name.ToLower())
+                if (userInput.ToLower() == Items[i].Name.ToLower())
                 {
-                    product = _products[i];
+                    item = Items[i];
                     return true;
                 } 
             }
-            product = null;
+
+            item = null;
             return false;
         }
 
-        private void ExposeProducts()
+        private void ExposeItems()
         {
-            _products.Add(new Product("Хлеб", 30));
-            _products.Add(new Product("Аптечка", 60));
-            _products.Add(new Product("Водка", 40));
-            _products.Add(new Product("Винтовка", 1200));
-            _products.Add(new Product("Пистолет", 600));
-            _products.Add(new Product("Дробовик", 800));
+            Items.Add(new Item("Хлеб", 30));
+            Items.Add(new Item("Аптечка", 60));
+            Items.Add(new Item("Водка", 40));
+            Items.Add(new Item("Винтовка", 1200));
+            Items.Add(new Item("Пистолет", 600));
+            Items.Add(new Item("Дробовик", 800));
         }
-    }
-
-    interface Inform
-    {
-       void ShowItems();
     }
 }
 
