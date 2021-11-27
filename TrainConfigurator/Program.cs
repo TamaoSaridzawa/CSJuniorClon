@@ -14,16 +14,16 @@ namespace TrainConfigurator
             Console.WriteLine("Нажмите любую клавишу для начала работы :");
             Console.ReadKey();
 
-            bool isWorkOffice = true;
+            bool isWorkRailwayStation = true;
 
-            while (isWorkOffice)
+            while (isWorkRailwayStation)
             {
-                BoxOffice boxOffice = new BoxOffice();
-                boxOffice.WorkOffice(ref isWorkOffice);
+                RailwayStation boxOffice = new RailwayStation();
+                boxOffice.WorkOffice(ref isWorkRailwayStation);
             }
         }
 
-        class BoxOffice
+        class RailwayStation
         {
             private Queue<Passenger> _passengers = new Queue<Passenger>();
             private List<Vagon> _train = new List<Vagon>();
@@ -32,7 +32,7 @@ namespace TrainConfigurator
 
             private string _route;
 
-            public BoxOffice()
+            public RailwayStation()
             {
                
             }
