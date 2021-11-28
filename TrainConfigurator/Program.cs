@@ -28,21 +28,15 @@ namespace TrainConfigurator
             private Queue<Passenger> _passengers = new Queue<Passenger>();
             private List<Vagon> _train = new List<Vagon>();
 
-            Random random = new Random();
+            private Random _random = new Random();
 
             private string _route;
-
-            public RailwayStation()
-            {
-               
-            }
 
             public void WorkOffice(ref bool isWorkOffice)
             {
                 CreateRoute();
                 CreatePassengers();
                 CreateTrain();
-                SeatPassenger();
                 ShowInfo();
 
                 Console.WriteLine("Для выхода из программы нажмите 'e', либо любую другую клавишу для формирования нового маршрута");
@@ -73,11 +67,11 @@ namespace TrainConfigurator
 
             private void CreatePassengers()
             {
-                int passengersCounte = random.Next(5, 30);
+                int passengersCounte = _random.Next(5, 30);
 
                 for (int i = 0; i < passengersCounte; i++)
                 {
-                    _passengers.Enqueue(new Passenger(random.Next(500, 1500)));
+                    _passengers.Enqueue(new Passenger(_random.Next(500, 1500)));
                 }
 
                 Console.WriteLine($"Количество пассажиров : {passengersCounte}");
@@ -90,22 +84,13 @@ namespace TrainConfigurator
 
                 while (_passengers.Count > maxSeatsCounte)
                 {
-                    _train.Add(new Vagon(random.Next(2, 6), number++));
+                    _train.Add(new Vagon(_random.Next(2, 6), number++));
                     maxSeatsCounte += _train[_train.Count - 1].NumberSeats; 
                 }
-            }
 
-            private void SeatPassenger()
-            {
                 for (int i = 0; i < _train.Count; i++)
                 {
-                    for (int j = 0; j < _train[i].GetPassengers().Length; j++)
-                    {
-                        if (_passengers.Count > 0)
-                        {
-                            _train[i].GetPassengers()[j] = _passengers.Dequeue();
-                        }
-                    }
+                    _train[i].SeatPassenger(_passengers);
                 }
             }
 
@@ -147,11 +132,6 @@ namespace TrainConfigurator
                 _passengersVagons = new Passenger[NumberSeats];
             }
 
-            public Passenger[] GetPassengers()
-            {
-                return _passengersVagons;
-            }
-
             public void ShowPassengers()
             {
                 for (int i = 0; i < _passengersVagons.Length; i++)
@@ -163,6 +143,17 @@ namespace TrainConfigurator
                     else
                     {
                         Console.WriteLine($"\tПассажир № {i + 1}. Билет № {_passengersVagons[i].TicketNumber}");
+                    }
+                }
+            }
+
+            public void SeatPassenger( Queue<Passenger> _passengers)
+            {
+                for (int j = 0; j < _passengersVagons.Length; j++)
+                {
+                    if (_passengers.Count > 0)
+                    {
+                        _passengersVagons[j] = _passengers.Dequeue();
                     }
                 }
             }
