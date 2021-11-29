@@ -16,28 +16,11 @@ namespace TrainConfigurator
 
             bool isWorkRailwayStation = true;
 
+            RailwayStation railwayStation = new RailwayStation();
+
             while (isWorkRailwayStation)
             {
-                RailwayStation boxOffice = new RailwayStation();
-                boxOffice.WorkOffice(ref isWorkRailwayStation);
-            }
-        }
-
-        class RailwayStation
-        {
-            private Queue<Passenger> _passengers = new Queue<Passenger>();
-            private List<Vagon> _train = new List<Vagon>();
-
-            private Random _random = new Random();
-
-            private string _route;
-
-            public void WorkOffice(ref bool isWorkOffice)
-            {
-                CreateRoute();
-                CreatePassengers();
-                CreateTrain();
-                ShowInfo();
+                railwayStation.WorkOffice();
 
                 Console.WriteLine("Для выхода из программы нажмите 'e', либо любую другую клавишу для формирования нового маршрута");
 
@@ -45,118 +28,141 @@ namespace TrainConfigurator
 
                 if (userInput == "e")
                 {
-                    isWorkOffice = false;
+                    isWorkRailwayStation = false;
                 }
-
                 Console.Clear();
             }
+        }
+    }
 
-            private void CreateRoute()
-            {
-                Console.Write("Укажите точку отправления: ");
-                string pointDeparture = Console.ReadLine();
+    class RailwayStation
+    {
+        private Queue<Passenger> _passengers = new Queue<Passenger>();
+        private List<Vagon> _vagons = new List<Vagon>();
 
-                Console.Write("Укажите точку прибытия: ");
-                string pointArrival = Console.ReadLine();
+        private Random _random = new Random();
 
-                Console.Clear();
+        private string _route;
 
-                _route = pointDeparture + " - " + pointArrival;
-                Console.WriteLine("Маршрут создан!");
-            }
-
-            private void CreatePassengers()
-            {
-                int passengersCounte = _random.Next(5, 30);
-
-                for (int i = 0; i < passengersCounte; i++)
-                {
-                    _passengers.Enqueue(new Passenger(_random.Next(500, 1500)));
-                }
-
-                Console.WriteLine($"Количество пассажиров : {passengersCounte}");
-            }
-
-            private void CreateTrain()
-            {
-                int maxSeatsCounte = 0;
-                int number = 1;
-
-                while (_passengers.Count > maxSeatsCounte)
-                {
-                    _train.Add(new Vagon(_random.Next(2, 6), number++));
-                    maxSeatsCounte += _train[_train.Count - 1].NumberSeats; 
-                }
-
-                for (int i = 0; i < _train.Count; i++)
-                {
-                    _train[i].SeatPassenger(_passengers);
-                }
-            }
-
-            private void ShowInfo()
-            {
-                Console.WriteLine($"Рейс : {_route} отправляется.");
-                Console.WriteLine($"Поезд состоит из {_train.Count} вагонов");
-                Console.WriteLine();
-
-                foreach (var vagon in _train)
-                {
-                    Console.WriteLine($"Вагон № {vagon.NumberVagon} : Количество мест -{vagon.NumberSeats}");
-
-                    vagon.ShowPassengers();
-                }
-            }
+        public void WorkOffice()
+        {
+            CreateRoute();
+            CreatePassengers();
+            CreateTrain();
+            ShowInfo();
+            SendTrain();
         }
 
-        class Passenger
+        private void CreateRoute()
         {
-            public int TicketNumber { get; private set; }
+            Console.Write("Укажите точку отправления: ");
+            string pointDeparture = Console.ReadLine();
 
-            public Passenger(int ticketNumber)
-            {
-                TicketNumber = ticketNumber;
-            }
+            Console.Write("Укажите точку прибытия: ");
+            string pointArrival = Console.ReadLine();
+
+            Console.Clear();
+
+            _route = pointDeparture + " - " + pointArrival;
+            Console.WriteLine("Маршрут создан!");
         }
 
-        class Vagon
+        private void CreatePassengers()
         {
-            public int NumberVagon { get; private set; }
-            private Passenger[] _passengersVagons;
-            public int NumberSeats { get; private set; }
+            int passengersCounte = _random.Next(5, 30);
 
-            public Vagon(int numberSeats, int numberVagon)
+            for (int i = 0; i < passengersCounte; i++)
             {
-                NumberVagon += numberVagon;
-                NumberSeats = numberSeats;
-                _passengersVagons = new Passenger[NumberSeats];
+                _passengers.Enqueue(new Passenger(_random.Next(500, 1500)));
             }
 
-            public void ShowPassengers()
+            Console.WriteLine($"Количество пассажиров : {passengersCounte}");
+        }
+
+        private void CreateTrain()
+        {
+            int maxSeatsCounte = 0;
+            int number = 1;
+
+            while (_passengers.Count > maxSeatsCounte)
             {
-                for (int i = 0; i < _passengersVagons.Length; i++)
-                {
-                    if (_passengersVagons[i] == null)
-                    {
-                        Console.WriteLine("\tСвободное место");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"\tПассажир № {i + 1}. Билет № {_passengersVagons[i].TicketNumber}");
-                    }
-                }
+                _vagons.Add(new Vagon(_random.Next(2, 6), number++));
+                maxSeatsCounte += _vagons[_vagons.Count - 1].QuantitySeats;
             }
 
-            public void SeatPassenger( Queue<Passenger> _passengers)
+            for (int i = 0; i < _vagons.Count; i++)
             {
-                for (int j = 0; j < _passengersVagons.Length; j++)
+                for (int j = 0; j < _vagons[i].QuantitySeats; j++)
                 {
                     if (_passengers.Count > 0)
                     {
-                        _passengersVagons[j] = _passengers.Dequeue();
+                        _vagons[i].SeatPassenger(_passengers.Dequeue(), j);
                     }
                 }
             }
+        }
+
+        private void ShowInfo()
+        {
+            Console.WriteLine($"Рейс : {_route} отправляется.");
+            Console.WriteLine($"Поезд состоит из {_vagons.Count} вагонов");
+            Console.WriteLine();
+
+            foreach (var vagon in _vagons)
+            {
+                Console.WriteLine($"Вагон № {vagon.Number} : Количество мест -{vagon.QuantitySeats}");
+
+                vagon.ShowPassengers();
+            }
+        }
+
+        private void SendTrain()
+        {
+            _vagons.Clear();
+        }
+    }
+
+    class Passenger
+    {
+        public int TicketNumber { get; private set; }
+
+        public Passenger(int ticketNumber)
+        {
+            TicketNumber = ticketNumber;
+        }
+    }
+
+    class Vagon
+    {
+        private Passenger[] _passengers;
+        public int Number { get; private set; }
+        public int QuantitySeats { get; private set; }
+
+        public Vagon(int quantitySeats, int numberVagon)
+        {
+            QuantitySeats = quantitySeats;
+            Number += numberVagon;
+            _passengers = new Passenger[QuantitySeats];
+        }
+
+        public void ShowPassengers()
+        {
+            for (int i = 0; i < _passengers.Length; i++)
+            {
+                if (_passengers[i] != null)
+                {
+                    Console.WriteLine($"\tПассажир № {i + 1}. Билет № {_passengers[i].TicketNumber}");
+                }
+                else
+                {
+                    Console.WriteLine("\tСвободное место");
+                }
+            }
+        }
+
+        public void SeatPassenger(Passenger passenger, int numberSeats)
+        {
+            _passengers[numberSeats] = passenger;
         }
     }
 }
