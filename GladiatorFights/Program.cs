@@ -11,28 +11,22 @@ namespace GladiatorFights
         static void Main(string[] args)
         {
             Arena arena = new Arena();
-            arena.Figth();
+            arena.GetGladiators();
             Console.ReadKey();
         }
     }
 
-    abstract class SuperAbility
+    abstract class Gladiator
     {
-        abstract public void UseSuperAbility(Gladiators gladiator);
-        abstract public void DescribeAbility();
-    }
-
-    class Gladiators : SuperAbility
-    {
+        protected internal string Name;
         private static int _counter;
         private int _number;
-        protected internal string Name { get; set; }
+        public int ChanceTriggeringSuperpowers { get; private set; }
         protected internal double Damage { get; set; }
         protected internal double Health { get; set; }
         protected internal double Armor { get; set; }
-        public int ChanceTriggeringSuperpowers { get; private set; }
 
-        public Gladiators(string name, int damage, int health, int armor, int chanceTriggeringSuperpowers)
+        public Gladiator(string name, int damage, int health, int armor, int chanceTriggeringSuperpowers)
         {
             _number += ++_counter;
             Name = name;
@@ -42,15 +36,27 @@ namespace GladiatorFights
             ChanceTriggeringSuperpowers = chanceTriggeringSuperpowers;
         }
 
-        public override void UseSuperAbility(Gladiators gladiator) { }
+        abstract public void UseSuperAbility(Gladiator gladiator);
 
-        public override void DescribeAbility() { }
+        abstract public void DescribeAbility();
 
-        public void Attack(Gladiators gladiator)
+        private void TakeDamage(Gladiator gladiator)
         {
             gladiator.Health -= Damage - gladiator.Armor;
 
             Console.WriteLine($"{Name} Нанес {Damage}  урона, заблокировано броней - {gladiator.Armor}, Здоровье  {gladiator.Name} - {gladiator.Health}");
+        }
+
+        public void Attack(Gladiator gladiator, int procent)
+        {
+            if (procent < ChanceTriggeringSuperpowers)
+            {
+                UseSuperAbility(gladiator);
+            }
+            else
+            {
+                TakeDamage(gladiator);
+            }
         }
 
         public void ShowStats()
@@ -59,7 +65,7 @@ namespace GladiatorFights
         }
     }
 
-    class Assasin : Gladiators
+    class Assasin : Gladiator
     {
         private int _doubleDamage;
 
@@ -68,7 +74,7 @@ namespace GladiatorFights
             _doubleDamage = damage * 2;
         }
 
-        public override void UseSuperAbility(Gladiators gladiator)
+        public override void UseSuperAbility(Gladiator gladiator)
         {
             gladiator.Health -= _doubleDamage - gladiator.Armor;
 
@@ -81,7 +87,7 @@ namespace GladiatorFights
         }
     }
 
-    class Warrior : Gladiators
+    class Warrior : Gladiator
     {
         private int _percentageBloodlust;
 
@@ -90,7 +96,7 @@ namespace GladiatorFights
             _percentageBloodlust = percentageBloodlust;
         }
 
-        public override void UseSuperAbility(Gladiators gladiator)
+        public override void UseSuperAbility(Gladiator gladiator)
         {
             gladiator.Health -= Damage - gladiator.Armor;
             Health += (Damage - gladiator.Armor) / 100 * _percentageBloodlust;
@@ -104,7 +110,7 @@ namespace GladiatorFights
         }
     }
 
-    class Shaman : Gladiators
+    class Shaman : Gladiator
     {
         private int _debuffPercentage;
 
@@ -113,7 +119,7 @@ namespace GladiatorFights
             _debuffPercentage = debuffPercentage;
         }
 
-        public override void UseSuperAbility(Gladiators gladiator)
+        public override void UseSuperAbility(Gladiator gladiator)
         {
             gladiator.Health -= Damage - gladiator.Armor;
             gladiator.Damage -= gladiator.Damage / 100 * _debuffPercentage;
@@ -127,11 +133,11 @@ namespace GladiatorFights
         }
     }
 
-    class Hunter : Gladiators
+    class Hunter : Gladiator
     {
         public Hunter(string name, int damage, int health, int armor, int chanceTriggeringSuperpowers) : base(name, damage, health, armor, chanceTriggeringSuperpowers) { }
 
-        public override void UseSuperAbility(Gladiators gladiator)
+        public override void UseSuperAbility(Gladiator gladiator)
         {
             gladiator.Health -= Damage;
 
@@ -149,16 +155,11 @@ namespace GladiatorFights
     {
         private Random _random = new Random();
 
-        private int _numberFigtersOne;
-        private int _numberFigtersTwo;
-
-        private List<Gladiators> _gladiators = new List<Gladiators> { new Hunter("Reksar", 190, 1300, 90, 35), new Warrior("Aragorn", 150, 1800, 120, 50, 70),
+        private List<Gladiator> _gladiators = new List<Gladiator> { new Hunter("Reksar", 190, 1300, 90, 35), new Warrior("Aragorn", 150, 1800, 120, 50, 70),
                new Assasin("Riki", 200, 1000, 60, 40), new Shaman("Tral", 130, 1200, 80 , 80, 10) };
 
-        public void Figth()
+        public void GetGladiators()
         {
-            bool success = false;
-
             foreach (var gladiator in _gladiators)
             {
                 gladiator.ShowStats();
@@ -166,61 +167,60 @@ namespace GladiatorFights
                 Console.WriteLine();
             }
 
-            int numberOne;
-            int numberTwo;
+            int number1;
+            int number2;
+            bool success = false;
 
             while (success == false)
             {
-                Console.WriteLine("Выберете первого и второго бойца");
+                Console.WriteLine("Выберете двух бойцов : ");
 
-                if (int.TryParse(Console.ReadLine(), out numberOne) && int.TryParse(Console.ReadLine(), out numberTwo))
+                if (int.TryParse(Console.ReadLine(), out number1) && int.TryParse(Console.ReadLine(), out number2))
                 {
-                    _numberFigtersOne = numberOne - 1;
-                    _numberFigtersTwo = numberTwo - 1;
-                    success = true;
+                    if (number1 != number2 && number1 <= _gladiators.Count && number2 <= _gladiators.Count && number1 > 0 && number2 > 0)
+                    {
+                        Gladiator gladiatorOne = _gladiators[number1 - 1];
+                        Gladiator gladiatorTWo = _gladiators[number2 - 1];
+
+                        Figth(gladiatorOne, gladiatorTWo);
+
+                        success = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Введены неверные номера героев!");
+                    }
                 }
                 else
                 {
                     Console.WriteLine("Введены некорректные данные");
                 }
             }
+        }
 
-            while (_gladiators[_numberFigtersOne].Health >= 0 && _gladiators[_numberFigtersTwo].Health >= 0)
+        private void Figth(Gladiator gladiatorOne, Gladiator gladiatorTwo)
+        {
+            while (gladiatorOne.Health >= 0 && gladiatorTwo.Health >= 0)
             {
                 int procent = _random.Next(1, 101);
 
-                if (procent < _gladiators[_numberFigtersOne].ChanceTriggeringSuperpowers)
-                {
-                    _gladiators[_numberFigtersOne].UseSuperAbility(_gladiators[_numberFigtersTwo]);
-                }
-                else
-                {
-                    _gladiators[_numberFigtersOne].Attack(_gladiators[_numberFigtersTwo]);
-                }
-
-                if (procent < _gladiators[_numberFigtersTwo].ChanceTriggeringSuperpowers)
-                {
-                    _gladiators[_numberFigtersTwo].UseSuperAbility(_gladiators[_numberFigtersOne]);
-                }
-                else
-                {
-                    _gladiators[_numberFigtersTwo].Attack(_gladiators[_numberFigtersOne]);
-                }
+                gladiatorOne.Attack(gladiatorTwo, procent);
+                gladiatorTwo.Attack(gladiatorOne, procent);
 
                 Console.WriteLine();
             }
 
-            if (_gladiators[_numberFigtersOne].Health <= 0 && _gladiators[_numberFigtersTwo].Health <= 0)
+            if (gladiatorOne.Health <= 0 && gladiatorTwo.Health <= 0)
             {
                 Console.WriteLine("Оба героя пали");
             }
-            else if (_gladiators[_numberFigtersOne].Health <= 0)
+            else if (gladiatorOne.Health <= 0)
             {
-                Console.WriteLine($"Победил {_gladiators[_numberFigtersTwo].Name}");
+                Console.WriteLine($"Победил {gladiatorTwo.Name}");
             }
-            else if (_gladiators[_numberFigtersTwo].Health <= 0)
+            else if (gladiatorTwo.Health <= 0)
             {
-                Console.WriteLine($"Победил {_gladiators[_numberFigtersOne].Name}");
+                Console.WriteLine($"Победил {gladiatorOne.Name}");
             }
         }
     }
