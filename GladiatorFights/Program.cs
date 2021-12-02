@@ -167,22 +167,19 @@ namespace GladiatorFights
                 Console.WriteLine();
             }
 
-            int number1;
-            int number2;
+            int numberOne;
+            int numberTwo;
             bool success = false;
 
             while (success == false)
             {
                 Console.WriteLine("Выберете двух бойцов : ");
 
-                if (int.TryParse(Console.ReadLine(), out number1) && int.TryParse(Console.ReadLine(), out number2))
+                if (int.TryParse(Console.ReadLine(), out numberOne) && int.TryParse(Console.ReadLine(), out numberTwo))
                 {
-                    if (number1 != number2 && number1 <= _gladiators.Count && number2 <= _gladiators.Count && number1 > 0 && number2 > 0)
+                    if (numberOne != numberTwo && numberOne <= _gladiators.Count && numberTwo <= _gladiators.Count && numberOne > 0 && numberTwo > 0)
                     {
-                        Gladiator gladiatorOne = _gladiators[number1 - 1];
-                        Gladiator gladiatorTWo = _gladiators[number2 - 1];
-
-                        Figth(gladiatorOne, gladiatorTWo);
+                        Figth(_gladiators[numberOne - 1], _gladiators[numberTwo - 1]);
 
                         success = true;
                     }
