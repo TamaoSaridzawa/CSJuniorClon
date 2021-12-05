@@ -11,7 +11,7 @@ namespace GladiatorFights
         static void Main(string[] args)
         {
             Arena arena = new Arena();
-            arena.GetGladiators();
+            arena.ChooseGladiators();
             Console.ReadKey();
         }
     }
@@ -19,12 +19,12 @@ namespace GladiatorFights
     abstract class Gladiator
     {
         protected internal string Name;
+        protected internal double Damage;
+        protected internal double Health;
+        protected internal double Armor;
         private static int _counter;
         private int _number;
         public int ChanceTriggeringSuperpowers { get; private set; }
-        protected internal double Damage { get; set; }
-        protected internal double Health { get; set; }
-        protected internal double Armor { get; set; }
 
         public Gladiator(string name, int damage, int health, int armor, int chanceTriggeringSuperpowers)
         {
@@ -36,16 +36,9 @@ namespace GladiatorFights
             ChanceTriggeringSuperpowers = chanceTriggeringSuperpowers;
         }
 
-        abstract public void UseSuperAbility(Gladiator gladiator);
+        public abstract void UseSuperAbility(Gladiator gladiator);
 
-        abstract public void DescribeAbility();
-
-        private void TakeDamage(Gladiator gladiator)
-        {
-            gladiator.Health -= Damage - gladiator.Armor;
-
-            Console.WriteLine($"{Name} Нанес {Damage}  урона, заблокировано броней - {gladiator.Armor}, Здоровье  {gladiator.Name} - {gladiator.Health}");
-        }
+        public abstract void DescribeAbility();
 
         public void Attack(Gladiator gladiator, int procent)
         {
@@ -55,8 +48,15 @@ namespace GladiatorFights
             }
             else
             {
-                TakeDamage(gladiator);
+               gladiator.TakeDamage(Damage);
             }
+        }
+
+        public void TakeDamage(double damage)
+        {
+            Health -= damage - Armor;
+
+            Console.WriteLine($"{Name} Получено {damage}  урона, заблокировано броней - {Armor}, Здоровье - {Health}");
         }
 
         public void ShowStats()
@@ -106,7 +106,7 @@ namespace GladiatorFights
 
         public override void DescribeAbility()
         {
-            Console.WriteLine($"Класс - 'Воин'. Способность - Кровожадный удар : Подлый удар со спины наносящий {Damage} урона, шанс срабатывания {ChanceTriggeringSuperpowers}%");
+            Console.WriteLine($"Класс - 'Воин'. Способность - Кровожадный удар : Восстанавливает {_percentageBloodlust}% от нанесенного урона, шанс срабатывания {ChanceTriggeringSuperpowers}%");
         }
     }
 
@@ -158,7 +158,7 @@ namespace GladiatorFights
         private List<Gladiator> _gladiators = new List<Gladiator> { new Hunter("Reksar", 190, 1300, 90, 35), new Warrior("Aragorn", 150, 1800, 120, 50, 70),
                new Assasin("Riki", 200, 1000, 60, 40), new Shaman("Tral", 130, 1200, 80 , 80, 10) };
 
-        public void GetGladiators()
+        public void ChooseGladiators()
         {
             foreach (var gladiator in _gladiators)
             {
