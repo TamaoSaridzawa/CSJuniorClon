@@ -18,11 +18,12 @@ namespace Supermarket
 
     class Supermarket
     {
+       private int _profit;
        private Queue<Client> _clients = new Queue<Client>();
 
         public void Serve()
         {
-            GetClients();
+            CreateClients();
 
             int counte = 1;
 
@@ -31,11 +32,13 @@ namespace Supermarket
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Идет обслуживание {counte++} клиента...");
 
-                _clients.Dequeue().Buy();
+              _profit += _clients.Dequeue().Buy();
             }
+
+            Console.WriteLine($"Доход от продаж составил - {_profit} рублей");
         }
 
-        private void GetClients()
+        private void CreateClients()
         {
             _clients.Enqueue(new Client(3000, new List<Product> {new Product("Молоко", 50), new Product("Колбаса", 350), new Product("Виски", 2550), new Product("Чипсы", 160), new Product("Сок", 100), new Product("Креветки", 450) } ));
             _clients.Enqueue(new Client(5000, new List<Product> {new Product("Мясо", 480), new Product("Сосиски", 210), new Product("Водка", 600), new Product("Вино", 1600), new Product("Сок", 100), new Product("Макароны", 300) } ));
@@ -56,16 +59,14 @@ namespace Supermarket
             _products = products;
         }
 
-        public void Buy()
+        public int Buy()
         {
             Console.ForegroundColor = ConsoleColor.Red;
             bool succes = false;
-
+           
             while (succes == false)
             {
-                 int purchaseAmount = 0;
-
-                CalculateAmountGoods(ref purchaseAmount);
+                int purchaseAmount = CalculateAmountGoods();
 
                 if (_money >= purchaseAmount)
                 {
@@ -75,7 +76,7 @@ namespace Supermarket
 
                     Console.WriteLine($"\tОстаток денег на счету - {_money}");
 
-                    succes = true;
+                    return purchaseAmount;
                 }
                 else
                 {
@@ -84,11 +85,14 @@ namespace Supermarket
                     RemoveProduct();
                 }
             }
+            return 0;
         }
 
-        private void CalculateAmountGoods(ref int purchaseAmount)
+        private int CalculateAmountGoods()
         {
+            int purchaseAmount = 0;
             Console.WriteLine("\tТоваров в корзине :");
+
             foreach (var product in _products)
             {
                 purchaseAmount += product.Price;
@@ -100,7 +104,8 @@ namespace Supermarket
 
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"\tСумма ваших покупок составила {purchaseAmount}, Денежных средсв на вашей карте {_money}");
-            
+
+            return purchaseAmount;
         }
 
         private void RemoveProduct()
