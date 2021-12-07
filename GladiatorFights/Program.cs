@@ -243,7 +243,7 @@ namespace GladiatorFights
             {
                 if (int.TryParse(Console.ReadLine(), out gladiatorIndex) && gladiatorIndex <= _gladiators.Count && gladiatorIndex > 0)
                 {
-                    return _gladiators[gladiatorIndex];
+                    return _gladiators[gladiatorIndex - 1];
                 }
                 else
                 {
