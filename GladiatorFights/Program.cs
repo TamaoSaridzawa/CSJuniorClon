@@ -11,19 +11,19 @@ namespace GladiatorFights
         static void Main(string[] args)
         {
             Arena arena = new Arena();
-            arena.ChooseGladiators();
+            arena.StartBattles();
             Console.ReadKey();
         }
     }
 
     abstract class Gladiator
     {
-        protected internal string Name;
-        protected internal double Damage;
-        protected internal double Health;
-        protected internal double Armor;
-        private static int _counter;
-        private int _number;
+        public static int _counter;
+        public int _number;
+        public string Name { get; protected set; }
+        public double Damage { get; protected set; }
+        public double Health { get; protected set; }
+        public double Armor { get; protected set; }
         public int ChanceTriggeringSuperpowers { get; private set; }
 
         public Gladiator(string name, int damage, int health, int armor, int chanceTriggeringSuperpowers)
@@ -48,8 +48,20 @@ namespace GladiatorFights
             }
             else
             {
-               gladiator.TakeDamage(Damage);
+              gladiator.TakeDamage(Damage);
             }
+        }
+
+        public void DealFullDamage(double damage)
+        {
+            Health -= damage;
+
+            Console.WriteLine($"{Name} Получено {damage} урона, броня проигнорирована, Здоровье - {Health}");
+        }
+
+        public void ReduceAttack(double damage)
+        {
+            Damage -= damage;
         }
 
         public void TakeDamage(double damage)
@@ -76,9 +88,9 @@ namespace GladiatorFights
 
         public override void UseSuperAbility(Gladiator gladiator)
         {
-            gladiator.Health -= _doubleDamage - gladiator.Armor;
+            Console.WriteLine($"{Name} использовал Коварный удар");
 
-            Console.WriteLine($"{Name} использовал Коварный удар, Нанесено урона {_doubleDamage}, заблокировано броней - {gladiator.Armor}, Здоровье {gladiator.Name} - {gladiator.Health}");
+            gladiator.TakeDamage(_doubleDamage);
         }
 
         public override void DescribeAbility()
@@ -98,10 +110,12 @@ namespace GladiatorFights
 
         public override void UseSuperAbility(Gladiator gladiator)
         {
-            gladiator.Health -= Damage - gladiator.Armor;
-            Health += (Damage - gladiator.Armor) / 100 * _percentageBloodlust;
+            double vampirism = (Damage - gladiator.Armor) / 100 * _percentageBloodlust;
+            Health += vampirism ;
 
-            Console.WriteLine($"{Name} использовал Кровожадный удар, Нанесено урона {Damage}, заблокировано броней - {gladiator.Armor}, Здоровье {gladiator.Name} - {gladiator.Health}");
+            Console.WriteLine($"{Name} использовал Кровожадный удар, Восстановлено {vampirism} ед. здоровья");
+
+            gladiator.TakeDamage(Damage);
         }
 
         public override void DescribeAbility()
@@ -121,10 +135,13 @@ namespace GladiatorFights
 
         public override void UseSuperAbility(Gladiator gladiator)
         {
-            gladiator.Health -= Damage - gladiator.Armor;
-            gladiator.Damage -= gladiator.Damage / 100 * _debuffPercentage;
+            double theEvilEye = gladiator.Damage / 100 * _debuffPercentage;
 
-            Console.WriteLine($"{Name} использовал Сглаз, урон {gladiator.Name} снижен на {_debuffPercentage} процентов, Нанесено урона {Damage},  заблокировано броней - {gladiator.Armor}, Здоровье - {gladiator.Name} {gladiator.Health}");
+            Console.WriteLine($"{Name} использовал Сглаз, урон {gladiator.Name} снижен на {_debuffPercentage} процентов");
+
+            gladiator.ReduceAttack(theEvilEye);
+
+            gladiator.TakeDamage(Damage);
         }
 
         public override void DescribeAbility()
@@ -139,9 +156,9 @@ namespace GladiatorFights
 
         public override void UseSuperAbility(Gladiator gladiator)
         {
-            gladiator.Health -= Damage;
+            Console.WriteLine($"{Name} использовал Меткий выстрел");
 
-            Console.WriteLine($"{Name} использовал Меткий выстрел, Нанесено урона {Damage}, Игнорирование брони , Здоровье - {gladiator.Name} {gladiator.Health}");
+            gladiator.DealFullDamage(Damage);
         }
 
         public override void DescribeAbility()
@@ -158,7 +175,7 @@ namespace GladiatorFights
         private List<Gladiator> _gladiators = new List<Gladiator> { new Hunter("Reksar", 190, 1300, 90, 35), new Warrior("Aragorn", 150, 1800, 120, 50, 70),
                new Assasin("Riki", 200, 1000, 60, 40), new Shaman("Tral", 130, 1200, 80 , 80, 10) };
 
-        public void ChooseGladiators()
+        public void StartBattles()
         {
             foreach (var gladiator in _gladiators)
             {
@@ -167,30 +184,25 @@ namespace GladiatorFights
                 Console.WriteLine();
             }
 
-            int numberOne;
-            int numberTwo;
-            bool success = false;
+            bool isSelectionCompleted = false;
 
-            while (success == false)
+            while (isSelectionCompleted == false)
             {
-                Console.WriteLine("Выберете двух бойцов : ");
+                Console.Write("Выберете первого бойца :");
+                Gladiator gladiatorOne = GetGladiator();
 
-                if (int.TryParse(Console.ReadLine(), out numberOne) && int.TryParse(Console.ReadLine(), out numberTwo))
+                Console.Write("Выберете второго бойца :");
+                Gladiator gladiatorTwo = GetGladiator();
+
+                if (gladiatorOne.Equals(gladiatorTwo))
                 {
-                    if (numberOne != numberTwo && numberOne <= _gladiators.Count && numberTwo <= _gladiators.Count && numberOne > 0 && numberTwo > 0)
-                    {
-                        Figth(_gladiators[numberOne - 1], _gladiators[numberTwo - 1]);
-
-                        success = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Введены неверные номера героев!");
-                    }
+                    Console.WriteLine("Боейц не может драться сам с собой!");
                 }
                 else
                 {
-                    Console.WriteLine("Введены некорректные данные");
+                    Figth(gladiatorOne, gladiatorTwo);
+
+                    isSelectionCompleted = true;
                 }
             }
         }
@@ -219,6 +231,27 @@ namespace GladiatorFights
             {
                 Console.WriteLine($"Победил {gladiatorOne.Name}");
             }
+        }
+
+        private Gladiator GetGladiator()
+        {
+            int gladiatorIndex;
+
+            bool success = false;
+
+            while (success == false)
+            {
+                if (int.TryParse(Console.ReadLine(), out gladiatorIndex) && gladiatorIndex <= _gladiators.Count && gladiatorIndex > 0)
+                {
+                    return _gladiators[gladiatorIndex];
+                }
+                else
+                {
+                    Console.WriteLine("Введены некорректные данные!");
+                }
+            }
+
+            return null;
         }
     }
 }
