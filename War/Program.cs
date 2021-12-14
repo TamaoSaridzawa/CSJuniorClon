@@ -20,35 +20,44 @@ namespace War
 
     abstract class Unit
     {
-        public int ChanceTriggeringSuperpowers;
-        public string _specialization { get; set; }
-        public bool IgnoringTank;
-        public double Damage;
-        protected double Health { get; set; }
-        protected double Armor { get; set; }
+        public string Name { get; protected set; }
+        public int ChanceTriggeringSuperpowers { get; protected set; }
+        public string Specialization { get;protected set; }
+        public bool IgnoringTank { get; protected set; }
+        public double Damage { get; protected set; }
+        public double Health { get; protected set; }
+        public double Armor { get; protected set; }
 
-        public Unit()
+        public Unit(string name)
         {
+            Name = name;
         }
 
         public void ShowStats()
         {
-            Console.WriteLine($"{_specialization}, Урон {Damage}, ЗДоровье {Health}, Броня {Armor}");
+            Console.WriteLine($"{Specialization}, Урон {Damage}, ЗДоровье {Health}, Броня {Armor}");
         }
 
         public abstract void DescribeAbility();
 
+        public abstract  void Skill(Unit unit);
+
+        public void Heal(Unit unit)
+       {
+            Skill(unit);
+       }
+
         public void GiveHealing(double health)
         {
             Health += health;
-            Console.WriteLine($"{_specialization} Получил {health} здоровья");
+            Console.WriteLine($"{Name} , {Specialization} Получил {health} здоровья");
         }
 
         public bool CheckHealth()
         {
             if (Health <= 0)
             {
-                Console.WriteLine($"{_specialization} убит");
+                Console.WriteLine($"{Specialization} убит");
                 return true;
             }
             else return false;
@@ -70,26 +79,24 @@ namespace War
         public void ReturnDamage(double damage)
         {
             Health -= damage;
-            Console.WriteLine($"{_specialization} Получает {damage} урона");
+            Console.WriteLine($"{Name} , {Specialization} Получает {damage} урона");
         }
 
         public void TakeDamage(double damage)
         {
             Health -= damage - Armor;
-            Console.WriteLine($"{_specialization} Получено {damage}  урона, заблокировано броней - {Armor}, Здоровье - {Health}");
+            Console.WriteLine($"{Name}, {Specialization} Получено {damage}  урона, заблокировано броней - {Armor}, Здоровье - {Health}");
         }
-
-        abstract public void Skill(Unit unit);
     }
 
     class Warrior : Unit
     {
         private double _rabies;
 
-        public Warrior() : base()
+        public Warrior(string name) : base(name)
         {
             ChanceTriggeringSuperpowers = 80;
-            _specialization = "Воин";
+            Specialization = "Воин";
             Damage = 300;
             Health = 1000;
             Armor = 100;
@@ -103,7 +110,7 @@ namespace War
 
         public override void Skill(Unit unit)
         {
-            Console.WriteLine($"{_specialization} Использовал 'бешенство'");
+            Console.WriteLine($"{Name} ,{Specialization} Использовал 'бешенство, атака увеличена'");
 
             Damage += Damage / 100 * _rabies;
             unit.TakeDamage(Damage);
@@ -114,9 +121,9 @@ namespace War
     {
         private double _aimedShot;
 
-        public Shooter() : base()
+        public Shooter(string name) : base(name)
         {
-            _specialization = "Стрелок";
+            Specialization = "Стрелок";
             Damage = 400;
             Health = 800;
             Armor = 70;
@@ -133,21 +140,21 @@ namespace War
         public override void Skill(Unit unit)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{_specialization} Использовал 'Выстрел дуплетом' ");
+            Console.WriteLine($"{Name} ,{Specialization} Использовал 'Выстрел дуплетом' ");
 
             unit.TakeDamage(_aimedShot);
             Console.ForegroundColor = ConsoleColor.Gray;
         }
     }
 
-    class Governor : Unit
+    class Druid : Unit
     {
         private double _firstAidKit;
 
-        public Governor() : base()
+        public Druid(string name) : base(name)
         {
-            _specialization = "Воевода";
-            Damage = 250;
+            Specialization = "Друид";
+            Damage = 290;
             Health = 1200;
             Armor = 120;
             ChanceTriggeringSuperpowers = 40;
@@ -161,7 +168,7 @@ namespace War
 
         public override void Skill(Unit unit)
         {
-            Console.WriteLine($"{_specialization} использовал аптечку");
+            Console.WriteLine($"{Name} ,{Specialization} использовал аптечку");
 
             Health += _firstAidKit;
 
@@ -173,24 +180,24 @@ namespace War
     {
         private double _healingBandage;
 
-        public Medic() : base()
+        public Medic(string name) : base(name)
         {
-            _specialization = "Медик";
+            Specialization = "Медик";
             Damage = 220;
             Health = 900;
             Armor = 50;
-            ChanceTriggeringSuperpowers = 80;
-            _healingBandage = 50;
+            ChanceTriggeringSuperpowers = 90;
+            _healingBandage = 70;
         }
 
         public override void DescribeAbility()
         {
-            Console.WriteLine($"С шансом {80} процентов исцеляет союзника на {_healingBandage}. Является хилом группы");
+            Console.WriteLine($"С шансом {ChanceTriggeringSuperpowers} процентов исцеляет союзника на {_healingBandage}. Является хилом группы");
         }
 
         public override void Skill(Unit unit)
         {
-            Console.WriteLine($"{_specialization} Использовал 'Заживдя.зая повязка'");
+            Console.WriteLine($"{Name}, {Specialization} использовал исцелени");
             unit.GiveHealing(_healingBandage);
         }
     }
@@ -199,9 +206,9 @@ namespace War
     {
         private double _spikedArmor;
 
-        public Defender() : base()
+        public Defender(string name) : base(name)
         {
-            _specialization = "Защитник";
+            Specialization = "Защитник";
             Damage = 240;
             Health = 1500;
             Armor = 200;
@@ -217,7 +224,7 @@ namespace War
         {
             _spikedArmor = unit.Damage / 2;
 
-            Console.WriteLine($"{_specialization} использовал 'Шипастый танк'");
+            Console.WriteLine($"{Name}, {Specialization} использовал 'Шипастый танк'");
 
             unit.ReturnDamage(_spikedArmor);
 
@@ -227,7 +234,7 @@ namespace War
 
     class Battlefield
     {
-        private Detachment _detachment = new Detachment() ;
+        private Detachment _detachment = new Detachment();
         private Detachment _detachment2 = new Detachment();
 
         Random random1 = new Random();
@@ -236,11 +243,11 @@ namespace War
         {
             while (_detachment.CheckForFighters() && _detachment2.CheckForFighters() )
             {
-                _detachment.JoinBattle(_detachment2._units, random1);
+                _detachment.JoinBattle(_detachment2.GetUnits(), random1);
 
                 Console.WriteLine("---------------------------");
 
-                _detachment2.JoinBattle(_detachment._units, random1);
+                _detachment2.JoinBattle(_detachment.GetUnits(), random1);
 
                 Console.WriteLine("---------------------------");
             }
@@ -258,18 +265,26 @@ namespace War
 
     class Detachment
     {
-        public List<Unit> _units = new List<Unit>();
-        public string Name;
-        public int  size = 5;
-        private bool _buffAttacks;
-        private bool _buffProtection;
+        private List<Unit> _units = new List<Unit>();
+        private int _size = 5;
+        public string Name { get; private set; }
+       
+        public List<Unit> GetUnits()
+        {
+            return _units;
+        }
 
         public Detachment()
+        {
+            Create();
+        }
+
+        private void Create()
         {
             Console.WriteLine("Введите имя вашей армии");
             Name = Console.ReadLine();
 
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < _size; i++)
             {
                 Console.Write("ВЫберете бойца");
 
@@ -278,21 +293,23 @@ namespace War
                 switch (userAnswer)
                 {
                     case "1":
-                        _units.Add(new Warrior());
+                        _units.Add(new Warrior(Console.ReadLine()));
                         break;
                     case "2":
-                        _units.Add(new Shooter());
+                        _units.Add(new Shooter(Console.ReadLine()));
                         break;
                     case "3":
-                        _units.Add(new Governor());
+                        _units.Add(new Druid(Console.ReadLine()));
                         break;
                     case "4":
-                        _units.Add(new Medic());
+                        _units.Add(new Medic(Console.ReadLine()));
                         break;
                     case "5":
-                        _units.Add(new Defender());
+                        _units.Add(new Defender(Console.ReadLine()));
                         break;
                     default:
+                        Console.WriteLine("Введены некорректные данные, повторите попытку");
+                        i--;
                         break;
                 }
             }
@@ -304,39 +321,36 @@ namespace War
 
             for (int i = 0; i < units.Count; i++)
             {
-                if (units[i]._specialization.Contains("Медик"))
+                if (units[i].Specialization.Contains("Медик"))
                 {
-                    units[i].Skill(units[random.Next(0, units.Count())]);
-                }
-
-                int indexUnit = random.Next(0, _units.Count());
-
-                int procent = random.Next(1, 101);
-
-                if (DefenderisAlive() && !units[i].IgnoringTank)
-                {
-                    units[i].Attack(GetDefender(ref indexUnit), procent);
+                    units[i].Heal(units[random.Next(0, units.Count())]);
                 }
                 else
                 {
-                    units[i].Attack(_units[indexUnit], procent);
-                }
+                    int indexUnit = random.Next(0, _units.Count());
 
-                if (_units[indexUnit].CheckHealth())
-                {
-                    _units.RemoveAt(indexUnit);
-                }
+                    int procent = random.Next(1, 101);
 
-                if (_units.Count == 0)
-                {
-                    break;
+                    if (DefenderisAlive() && !units[i].IgnoringTank)
+                    {
+                        units[i].Attack(GetDefender(ref indexUnit), procent);
+                    }
+                    else
+                    {
+                        units[i].Attack(_units[indexUnit], procent);
+                    }
+
+                    if (_units[indexUnit].CheckHealth())
+                    {
+                        _units.RemoveAt(indexUnit);
+                    }
+
+                    if (_units.Count == 0)
+                    {
+                        break;
+                    }
                 }
             }
-
-            //foreach (var unit in _units)
-            //{
-                
-            //}
         }
 
         public bool CheckForFighters()
@@ -344,25 +358,25 @@ namespace War
             return _units.Count > 0;
         }
 
-        public Unit GetDefender(ref int indexDefender)
+        private Unit GetDefender(ref int indexDefender)
         {
             for (int i = 0; i < _units.Count; i++)
             {
-                if (_units[i]._specialization.Contains("Защитник"))
+                if (_units[i].Specialization.Contains("Защитник"))
                 {
                     indexDefender = i;
                     return _units[i];
                 }  
             }
-            
+
             return null;
         }
 
-        public bool DefenderisAlive()
+        private bool DefenderisAlive()
         {
             foreach (var unit in _units)
             {
-                if (unit._specialization.Contains("Защитник"))
+                if (unit.Specialization.Contains("Защитник"))
                 {
                     return true;
                 }
@@ -370,16 +384,11 @@ namespace War
 
             return false;
         }
-
-        public void FindWoundedFighter()
-        {
-
-        }
     }
 
     class Tavern 
     {
-        private List<Unit> _fighers = new List<Unit> { new Warrior(), new Shooter(), new Governor(), new Medic(), new Defender() };
+        private List<Unit> _fighers = new List<Unit> { new Warrior("Боец № 1"), new Shooter("Боец № 2"), new Druid("Боец № 3"), new Medic("Боец № 4"), new Defender("Боец № 5") };
 
         public void ShowFihters()
         {
