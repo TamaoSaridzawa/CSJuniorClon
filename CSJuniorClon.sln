@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Supermarket", "Supermarket\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "War", "War\War.csproj", "{8D66A65E-8D9D-4998-95C3-2A72CC001C03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aquarium", "Aquarium\Aquarium.csproj", "{7D77D02B-4DD9-4B29-A714-B4DEA0621C86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{8D66A65E-8D9D-4998-95C3-2A72CC001C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D66A65E-8D9D-4998-95C3-2A72CC001C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D66A65E-8D9D-4998-95C3-2A72CC001C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D77D02B-4DD9-4B29-A714-B4DEA0621C86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D77D02B-4DD9-4B29-A714-B4DEA0621C86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D77D02B-4DD9-4B29-A714-B4DEA0621C86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D77D02B-4DD9-4B29-A714-B4DEA0621C86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +114,7 @@ Global
 		{661E4A82-4118-4A75-80C3-1C47FAFF5490} = {B8128465-2F14-4C6C-8F0E-A2F6F351C759}
 		{8CF644AD-16AE-40FC-98CC-6EF72DE75517} = {B8128465-2F14-4C6C-8F0E-A2F6F351C759}
 		{8D66A65E-8D9D-4998-95C3-2A72CC001C03} = {B8128465-2F14-4C6C-8F0E-A2F6F351C759}
+		{7D77D02B-4DD9-4B29-A714-B4DEA0621C86} = {B8128465-2F14-4C6C-8F0E-A2F6F351C759}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6633BB6-C186-4F6D-A4DD-E73AA04875DB}
