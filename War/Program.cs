@@ -12,7 +12,6 @@ namespace War
         {
            List<Unit> _fighers = new List<Unit> { new Warrior("Боец № 1"), new Shooter("Боец № 2"), new Governor("Боец № 3"), new Medic("Боец № 4"), new Defender("Боец № 5") };
 
-       
             Console.WriteLine("Сейчас в таверне есть следующие бойцы : ");
 
             foreach (var figters in _fighers)
@@ -53,11 +52,6 @@ namespace War
         public abstract void DescribeAbility();
 
         public abstract  void UseSuperAbility(Unit unit, List<Unit> units);
-
-       // public void Heal(Unit unit)
-       //{
-       //     Skill(unit);
-       //}
 
         public void GiveHealing(double health)
         {
