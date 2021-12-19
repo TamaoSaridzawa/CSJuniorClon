@@ -118,7 +118,7 @@ namespace Aquarium
 
         public void ShowFishes()
         {
-            if (!IsEmpty())
+            if (IsEmpty())
             {
                 int counte = 1;
 
@@ -190,7 +190,7 @@ namespace Aquarium
 
         private bool IsEmpty()
         {
-            return _fishes.Count < 0;
+            return _fishes.Count > 0;
         }
     }
 
