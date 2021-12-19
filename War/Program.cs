@@ -334,6 +334,10 @@ namespace War
         public Detachment()
         {
             _tavern.ShowFigters();
+
+            Console.Write("Введите имя вашей армии :");
+            Name = Console.ReadLine();
+
             Create();
         }
 
@@ -380,9 +384,6 @@ namespace War
 
         private void Create()
         {
-            Console.WriteLine("Введите имя вашей армии");
-            Name = Console.ReadLine();
-
             while (_units.Count < _size)
             {
                 Console.Write("ВЫберете бойца :");
