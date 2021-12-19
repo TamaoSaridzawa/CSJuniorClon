@@ -10,16 +10,6 @@ namespace War
     {
         static void Main(string[] args)
         {
-           List<Unit> _fighers = new List<Unit> { new Warrior("Боец № 1"), new Shooter("Боец № 2"), new Governor("Боец № 3"), new Medic("Боец № 4"), new Defender("Боец № 5") };
-
-            Console.WriteLine("Сейчас в таверне есть следующие бойцы : ");
-
-            foreach (var figters in _fighers)
-            {
-                figters.ShowStats();
-                figters.DescribeAbility();
-            }
-       
             Battlefield battlefield = new Battlefield();
             battlefield.Fight();
             Console.ReadKey();
@@ -28,6 +18,7 @@ namespace War
 
     abstract class Unit
     {
+        public int Number { get; protected set; }
         public string Name { get; protected set; }
         public int ChanceTriggeringSuperpowers { get; protected set; }
         public string Specialization { get; protected set; }
@@ -40,8 +31,6 @@ namespace War
             Name = name;
         }
 
-        public abstract void ChooseFriendlyTarget(List<Unit> units);
-
         public abstract void DescribeAbility();
 
         public abstract  void UseSuperAbility(Unit unit, List<Unit> units);
@@ -53,7 +42,7 @@ namespace War
 
         public void ShowStats()
         {
-            Console.WriteLine($"{Specialization}, Урон {Damage}, ЗДоровье {Health}, Броня {Armor}");
+            Console.WriteLine($"Номер бойца {Number}, {Specialization}, Урон {Damage}, ЗДоровье {Health}, Броня {Armor}");
         }
 
         public void GiveHealing(double health)
@@ -62,7 +51,7 @@ namespace War
             Console.WriteLine($"{Name} , {Specialization} Получил {health} здоровья");
         }
 
-        public void boostAttack(double damage)
+        public void BoostAttack(double damage)
         {
             Damage += damage;
         }
@@ -83,17 +72,10 @@ namespace War
            {
                 UseSuperAbility(unit, friendlyUnits);
            }
-
            else
            {
                 unit.TakeDamage(Damage);
            }
-        }
-
-        public void ReturnDamage(double damage)
-        {
-            Health -= damage;
-            Console.WriteLine($"{Name} , {Specialization} Получает {damage} урона");
         }
 
         public void TakeDamage(double damage)
@@ -109,17 +91,13 @@ namespace War
 
         public Warrior(string name) : base(name)
         {
+            Number = 1;
             ChanceTriggeringSuperpowers = 80;
             Specialization = "Воин";
             Damage = 300;
             Health = 1000;
             Armor = 100;
             _rabies = 10;
-        }
-
-        public override void ChooseFriendlyTarget(List<Unit> units)
-        {
-            throw new NotImplementedException();
         }
 
         public override void DescribeAbility()
@@ -143,6 +121,7 @@ namespace War
 
         public Shooter(string name) : base(name)
         {
+            Number = 2;
             Specialization = "Стрелок";
             Damage = 400;
             Health = 800;
@@ -154,11 +133,6 @@ namespace War
         public override bool IsIgnorTank()
         {
             return true;
-        }
-
-        public override void ChooseFriendlyTarget(List<Unit> units)
-        {
-            throw new NotImplementedException();
         }
 
         public override void DescribeAbility()
@@ -183,6 +157,7 @@ namespace War
 
         public Governor(string name) : base(name)
         {
+            Number = 3;
             Specialization = "Воевода";
             Damage = 290;
             Health = 1200;
@@ -192,11 +167,11 @@ namespace War
             _firstAidKit = 30;
         }
 
-        public override void ChooseFriendlyTarget(List<Unit> units)
+        private void IncreaseAllyAttack(List<Unit> friendlyUnits)
         {
-            foreach (var unit in units)
+            foreach (var unit in friendlyUnits)
             {
-                unit.boostAttack(_battleCry);
+                unit.BoostAttack(_battleCry);
             }
         }
 
@@ -209,7 +184,7 @@ namespace War
         {
             Console.WriteLine($"{Name} ,{Specialization} использовал аптечку, урон группы увеличен на {_battleCry}");
 
-            ChooseFriendlyTarget(friendlyUnits);
+            IncreaseAllyAttack(friendlyUnits);
 
             Health += _firstAidKit;
 
@@ -223,6 +198,7 @@ namespace War
 
         public Medic(string name) : base(name)
         {
+            Number = 4;
             Specialization = "Медик";
             Damage = 220;
             Health = 900;
@@ -236,18 +212,18 @@ namespace War
             Console.WriteLine($"С шансом {ChanceTriggeringSuperpowers} процентов исцеляет союзника на {_healingBandage}. Является хилом группы");
         }
 
-        public override void ChooseFriendlyTarget(List<Unit> units)
+        private void HealAlly(List<Unit> friendlyUnits)
         {
             Random random = new Random();
 
-            units[random.Next(0, units.Count)].GiveHealing(_healingBandage);
+            friendlyUnits[random.Next(0, friendlyUnits.Count)].GiveHealing(_healingBandage);
         }
 
         public override void UseSuperAbility(Unit enemyUnit, List<Unit> friendlyUnits)
         {
             Console.WriteLine($"{Name}, {Specialization} использовал исцелени");
 
-            ChooseFriendlyTarget(friendlyUnits);
+            HealAlly(friendlyUnits);
 
             enemyUnit.TakeDamage(Damage);
         }
@@ -259,16 +235,12 @@ namespace War
 
         public Defender(string name) : base(name)
         {
+            Number = 5;
             Specialization = "Защитник";
             Damage = 240;
             Health = 1500;
             Armor = 200;
             ChanceTriggeringSuperpowers = 50;
-        }
-
-        public override void ChooseFriendlyTarget(List<Unit> units)
-        {
-            throw new NotImplementedException();
         }
 
         public override void DescribeAbility()
@@ -278,13 +250,11 @@ namespace War
 
         public override void UseSuperAbility(Unit enemyUnit, List<Unit> friendlyUnits)
         {
-            _spikedArmor = enemyUnit.Damage / 2;
+            _spikedArmor = Damage + (enemyUnit.Damage / 3);
 
             Console.WriteLine($"{Name}, {Specialization} использовал 'Шипастый танк'");
 
-            enemyUnit.ReturnDamage(_spikedArmor);
-
-            enemyUnit.TakeDamage(Damage);
+            enemyUnit.TakeDamage(_spikedArmor);
         }
     }
 
@@ -319,14 +289,51 @@ namespace War
         }
     }
 
+    class Tavern
+    {
+        List<Unit> _fighers = new List<Unit> { new Warrior($"Боец"), new Shooter("Боец"), new Governor("Боец"), new Medic("Боец"), new Defender("Боец") };
+
+        public void ShowFigters()
+        {
+            Console.WriteLine("Сейчас в таверне есть следующие бойцы : ");
+
+            foreach (var figter in _fighers)
+            {
+                figter.ShowStats();
+                figter.DescribeAbility();
+            }
+        }
+
+        public Unit GetUnit(int number)
+        {
+            switch (number)
+            {
+                case 1:
+                    return new Warrior(Console.ReadLine());
+                case 2:
+                    return new Shooter(Console.ReadLine());
+                case 3:
+                    return new Governor(Console.ReadLine());
+                case 4:
+                    return new Medic(Console.ReadLine());
+                case 5:
+                    return new Defender(Console.ReadLine());
+            }
+
+            return null;
+        }
+    }
+
     class Detachment
     {
         private List<Unit> _units = new List<Unit>();
         private int _size = 5;
+        private Tavern _tavern = new Tavern();
         public string Name { get; private set; }
 
         public Detachment()
         {
+            _tavern.ShowFigters();
             Create();
         }
 
@@ -345,7 +352,7 @@ namespace War
 
                 int procent = random.Next(1, 101);
 
-                if (TryGetDefender() && !units[i].IsIgnorTank())
+                if (IsDefenderAlive() && !units[i].IsIgnorTank())
                 {
                     units[i].Attack(GetDefender(out indexUnit), procent, units);
                 }
@@ -376,33 +383,19 @@ namespace War
             Console.WriteLine("Введите имя вашей армии");
             Name = Console.ReadLine();
 
-            for (int i = 0; i < _size; i++)
+            while (_units.Count < _size)
             {
-                Console.Write("ВЫберете бойца");
+                Console.Write("ВЫберете бойца :");
 
-                string userAnswer = Console.ReadLine();
+                int number;
 
-                switch (userAnswer)
+                if (int.TryParse(Console.ReadLine(), out number) && number > 0 && number <= _size)
                 {
-                    case "1":
-                        _units.Add(new Warrior(Console.ReadLine()));
-                        break;
-                    case "2":
-                        _units.Add(new Shooter(Console.ReadLine()));
-                        break;
-                    case "3":
-                        _units.Add(new Governor(Console.ReadLine()));
-                        break;
-                    case "4":
-                        _units.Add(new Medic(Console.ReadLine()));
-                        break;
-                    case "5":
-                        _units.Add(new Defender(Console.ReadLine()));
-                        break;
-                    default:
-                        Console.WriteLine("Введены некорректные данные, повторите попытку");
-                        i--;
-                        break;
+                    _units.Add(_tavern.GetUnit(number));
+                }
+                else
+                {
+                    Console.WriteLine("Такого номера не существует");
                 }
             }
         }
@@ -422,7 +415,7 @@ namespace War
             return null;
         }
 
-        private bool TryGetDefender()
+        private bool IsDefenderAlive()
         {
             foreach (var unit in _units)
             {
