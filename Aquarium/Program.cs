@@ -27,26 +27,21 @@ namespace Aquarium
             _name = Console.ReadLine();
         }
 
-        public void Life()
+        public void Live()
         {
             LifeSpan--;
         }
 
-        public void CheckHealth()
+        public void ViewStatus()
         {
             if (LifeSpan > 0)
             {
-                ShowIndicators();
+                Console.WriteLine($"{View} по имени {_name} - осталось жить {LifeSpan} дней");
             }
             else
             {
                 Console.WriteLine($"{View} по имени {_name} плавает к верху брюхом...");
             }
-        }
-
-        public void ShowIndicators()
-        {
-            Console.WriteLine($"{View} по имени {_name} - осталось жить {LifeSpan} дней");
         }
     }
 
@@ -81,7 +76,7 @@ namespace Aquarium
     {
         private int _capacity;
 
-        private List<Fish> _fishs = new List<Fish>();
+        private List<Fish> _fishes = new List<Fish>();
 
         public Aquarium()
         {
@@ -90,9 +85,9 @@ namespace Aquarium
 
         public void AddFish()
         {
-            if (_fishs.Count < _capacity)
+            if (_fishes.Count < _capacity)
             {
-                _fishs.Add(GetFish());
+                _fishes.Add(CreateFish());
             }
             else
             {
@@ -102,17 +97,17 @@ namespace Aquarium
 
         public void EndDay()
         {
-            foreach (var fish in _fishs)
+            foreach (var fish in _fishes)
             {
-                fish.Life();
+                fish.Live();
             }
         }
 
        public void RemoveFish()
         {
-            if (CheckForFish())
+            if (IsEmpty())
             {
-                _fishs.RemoveAt(GetIndex());
+                _fishes.RemoveAt(GetIndex());
             }
             else
             {
@@ -121,18 +116,18 @@ namespace Aquarium
            
         }
 
-        public void MonitorFish()
+        public void ShowFishes()
         {
-            if (CheckForFish())
+            if (!IsEmpty())
             {
                 int counte = 1;
 
-                foreach (var fish in _fishs)
+                foreach (var fish in _fishes)
                 {
                     Console.Write($"{counte} - ");
                     counte++;
 
-                    fish.CheckHealth();
+                    fish.ViewStatus();
                 }
             }
             else
@@ -143,7 +138,7 @@ namespace Aquarium
 
         private int GetIndex()
         {
-            int numberFish = _fishs.Count();
+            int numberFish = _fishes.Count();
             int number;
             bool success = false;
 
@@ -165,7 +160,7 @@ namespace Aquarium
             return -1;
         }
 
-        private Fish GetFish()
+        private Fish CreateFish()
         {
             bool success = false;
            
@@ -193,49 +188,47 @@ namespace Aquarium
             return null;
         }
 
-        private bool CheckForFish()
+        private bool IsEmpty()
         {
-            return _fishs.Count > 0;
+            return _fishes.Count < 0;
         }
     }
 
     class Aquarist
     {
-        Aquarium aquarium = new Aquarium();
+        private Aquarium _aquarium = new Aquarium();
 
         public void Service()
         {
             bool isStop = true;
-            int number;
 
             while (isStop)
             {
-                Console.WriteLine("Выберете действие : \n1.Проверить рыбок\n2.Добавить новую рыбку\n3.Вытащить рыбку из аквариума\n4.Забить сегодня на аквариум и пойти спать (очистить консоль)" +
-                    "\n5.Выкинуть аквариум в окно (выход из программы)");
+                Console.WriteLine("Выберете действие : \n1.Проверить рыбок\n2.Добавить новую рыбку\n3.Вытащить рыбку из аквариума\nЛюбая клавиша.Забить сегодня на аквариум и пойти спать (очистить консоль)" +
+                    "\n4.Выкинуть аквариум в окно (выход из программы)");
 
-                if (int.TryParse(Console.ReadLine(), out number) && number > 0 && number <= 5)
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
                 {
-                    switch (number)
-                    {
-                        case 1:
-                            aquarium.MonitorFish();
-                            break;
-                        case 2:
-                            aquarium.AddFish();
-                            break;
-                        case 3:
-                            aquarium.RemoveFish();
-                            break;
-                        case 4:
-                            Console.Clear();
-                            break;
-                        case 5:
-                            isStop = false;
-                            break;
-                    }
-
-                    aquarium.EndDay();
+                    case "1":
+                        _aquarium.ShowFishes();
+                        break;
+                    case "2":
+                        _aquarium.AddFish();
+                        break;
+                    case "3":
+                        _aquarium.RemoveFish();
+                        break;
+                    case "4":
+                        isStop = false;
+                        break;
+                    default:
+                        Console.Clear();
+                        break;
                 }
+
+                _aquarium.EndDay();
             }
         }
     }
