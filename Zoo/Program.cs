@@ -17,6 +17,7 @@ namespace Zoo
             Console.WriteLine("Вас приветствует программа Зоопарк");
 
             visitor.Watch(zoo);
+            
 
             bool isOpenZoo = true;
 
@@ -150,21 +151,30 @@ namespace Zoo
 
     class Zoo : IHasInfo
     {
-        private List<Aviary> _aviaries = new List<Aviary>
+        private List<Aviary> _aviaries = new List<Aviary>();
+
+        public Zoo()
         {
-            new Aviary("Здесь живут волки", new List<Animal> { new Wolf("Волк - Вольф", true), new Wolf("Волчица - Соня", false) }),
-            new Aviary("Здесь живет медоед", new List<Animal> { new HoneyBadger("Медоед - Хаос", true) }),
-            new Aviary("Здесь живет прайд львов", new List<Animal> { new Leon("Король Лев - Кинг", true), new Leon("Лев - Панки", true), new Leon("Львица - Сири", false), new Leon("Львица - Кира", false)}),
-            new Aviary("Здесь живут панды и коростени", new List<Animal> { new Panda("Панда - Мякиш", true), new Korosten("Коростень - Сэнди", false) }),
-        };
+            _aviaries = CreateAviaries();
+        }
 
         public void ShowInfo()
         {
             Console.WriteLine($"На данных момент открытых вольров - {_aviaries.Count}");
         }
 
-        public List<Aviary> GetAviaries()
+        public IReadOnlyList<Aviary> GetAviaries()
         {
+            return _aviaries;
+        }
+
+        private List<Aviary> CreateAviaries()
+        {
+            _aviaries.Add(new Aviary("Здесь живут волки", new List<Animal> { new Wolf("Волк - Вольф", true), new Wolf("Волчица - Соня", false) }));
+            _aviaries.Add(new Aviary("Здесь живет медоед", new List<Animal> { new HoneyBadger("Медоед - Хаос", true) }));
+            _aviaries.Add(new Aviary("Здесь живет прайд львов", new List<Animal> { new Leon("Король Лев - Кинг", true), new Leon("Лев - Панки", true), new Leon("Львица - Сири", false), new Leon("Львица - Кира", false) }));
+            _aviaries.Add(new Aviary("Здесь живут панды и коростени", new List<Animal> { new Panda("Панда - Мякиш", true), new Korosten("Коростень - Сэнди", false) }));
+
             return _aviaries;
         }
     }
