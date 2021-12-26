@@ -18,12 +18,7 @@ namespace CarService
         }
     }
 
-    interface IHasInformation
-    {
-        void ShowBalance();
-    }
-
-    class CarService : IHasInformation
+    class CarService
     {
         private int _balance;
 
@@ -43,10 +38,10 @@ namespace CarService
 
         public void Work()
         {
-            ServeClient();
+            ServeClients();
         }
 
-        public void ShowBalance()
+        private void ShowBalance()
         {
             if (_balance < 0)
             {
@@ -58,39 +53,30 @@ namespace CarService
             }
         }
 
-        private void ServeClient()
+        private void ServeClients()
         {
             Console.WriteLine("Идет работа автосервиса........");
 
             while (_clients.Count > 0)
             {
                 Console.WriteLine();
-                IdentifyMalfunction(_clients.Dequeue());
+                ServeClient(_clients.Dequeue());
             }
         }
 
-        private void IdentifyMalfunction(Client client)
+        private void ServeClient(Client client)
         {
             Console.WriteLine($"Автомобиль - {client.Car.Name}, Неисправность - {client.Car.Malfunction}, у клиента {client.Money} денежных средств");
 
             int indexDetail;
 
-            bool fraud = false;
-
-            if (IsThereDetail(client.Car.Malfunction, out indexDetail, ref fraud))
+            if (TryGetDetailIndex(client.Car.Malfunction, out indexDetail))
             {
                 if (IsCustomerSolvent(client.Money, _details[indexDetail].GetTotalCost()))
                 {
                     MakeProfit(client, _details[indexDetail].GetTotalCost());
 
                     UsePartRepair(indexDetail);
-
-                    if (fraud)
-                    {
-                        Console.WriteLine($"После ремонта, автомобиль перестал подавать признаки жизни....\nКлиент потребовал возместить ущерб в размере {client.Car.CostNewPart} рублей");
-
-                        CompensateDamage(client);
-                    }
                 }
                 else
                 {
@@ -99,7 +85,42 @@ namespace CarService
             }
             else
             {
-                PayFine(client);
+                Console.Write("Остутствует деталь на складе : Введите 1 - Сказать правду. Введите 2 - обмануть клиента :");
+                
+                bool isInputCorrect = false;
+                string userAnswer = Console.ReadLine();
+
+                while (isInputCorrect == false)
+                {
+                    switch (userAnswer)
+                    {
+                        case "1":
+                            Console.WriteLine($"В данный момент, такой детали в наличии нет, но мы готовы выплатить компенсацию в размере {_penaltyPrice} рублей");
+
+                            PayFine(client);
+
+                            isInputCorrect = true;
+                            break;
+                        case "2":
+                            Random random = new Random();
+                            Console.WriteLine("Все в норме, Покалечим.... ваш авто, можете покурить");
+
+                            isInputCorrect = true;
+
+                            indexDetail = random.Next(0, _details.Count);
+
+                            UsePartRepair(indexDetail);
+
+                            Console.WriteLine($"После ремонта, при проверке, автомобиль перестал подавать признаки жизни....\nКлиент потребовал возместить ущерб в размере {client.Car.CostNewPart} рублей");
+
+                            CompensateDamage(client);
+
+                            break;
+                        default:
+                            Console.WriteLine("Введены некорректные данные");
+                            break;
+                    }
+                }
             }
 
             ShowBalance();
@@ -137,7 +158,7 @@ namespace CarService
             _details.RemoveAt(index);
         }
 
-        private bool IsThereDetail(string malfunction, out int indexDetail, ref bool fraud)
+        private bool TryGetDetailIndex(string malfunction, out int indexDetail)
         {
             for (int i = 0; i < _details.Count; i++)
             {
@@ -148,39 +169,8 @@ namespace CarService
                     indexDetail = i;
                     return true;
                 }
-
-                if (i == _details.Count - 1)
-                {
-                    bool isInputCorrect = false;
-
-                    while (isInputCorrect == false)
-                    {
-                        Console.Write("Остутствует деталь на складе : Введите 1 - Сказать правду. Введите 2 - обмануть клиента :");
-
-                        string userAnswer = Console.ReadLine();
-
-                        switch (userAnswer)
-                        {
-                            case "1":
-                                Console.WriteLine($"В данный момент, такой детали в наличии нет, но мы готовы выплатить компенсацию в размере {_penaltyPrice} рублей");
-
-                                isInputCorrect = true;
-                                break;
-                            case "2":
-                                Random random = new Random();
-                                Console.WriteLine("Все в норме, Покалечим.... ваш авто, можете покурить");
-
-                                fraud = true;
-
-                                indexDetail = random.Next(0, _details.Count);
-                                return true;
-                            default:
-                                Console.WriteLine("Введены некорректные данные");
-                                break;
-                        }
-                    }
-                }
             }
+
             indexDetail = -1;
             return false;
         }
@@ -291,7 +281,7 @@ namespace CarService
         }
     }
 
-    class Client : IHasInformation
+    class Client
     {
         public Car Car { get; private set; }
         public int Money { get; private set; }
