@@ -32,8 +32,8 @@ namespace CarService
         {
             _penaltyPrice = 5000;
             _balance = balance;
-            _details = GetDetails();
-            _clients = GetClients();
+            _details = CreateDetails();
+            _clients = CreateClients();
         }
 
         public void Work()
@@ -175,7 +175,7 @@ namespace CarService
             return false;
         }
 
-        private List<Detail> GetDetails()
+        private List<Detail> CreateDetails()
         {
             _details.Add(new Engine());
             _details.Add(new Battery());
@@ -188,7 +188,7 @@ namespace CarService
             return _details;
         }
 
-        private Queue<Client> GetClients()
+        private Queue<Client> CreateClients()
         {
             _clients.Enqueue(new Client(new Car("Волга", "Двигатель", 50000), 30000));
             _clients.Enqueue(new Client(new Car("Тойота", "Коробка передач", 20000), 13000));
