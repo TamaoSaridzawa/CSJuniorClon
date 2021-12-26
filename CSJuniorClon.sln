@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RechercheCriminel", "Recher
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amnesty", "Amnesty\Amnesty.csproj", "{9A33CCAE-BE9C-407E-8D01-2F4CA2CC33D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnarchyHospital", "AnarchyHospital\AnarchyHospital.csproj", "{5AEE2E1A-F312-49C7-BC4E-1DAADEB3C0CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{9A33CCAE-BE9C-407E-8D01-2F4CA2CC33D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A33CCAE-BE9C-407E-8D01-2F4CA2CC33D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A33CCAE-BE9C-407E-8D01-2F4CA2CC33D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AEE2E1A-F312-49C7-BC4E-1DAADEB3C0CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AEE2E1A-F312-49C7-BC4E-1DAADEB3C0CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AEE2E1A-F312-49C7-BC4E-1DAADEB3C0CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AEE2E1A-F312-49C7-BC4E-1DAADEB3C0CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +151,7 @@ Global
 		{CC3B0CB6-DB42-4F04-8DFA-8826E026B5FE} = {B8128465-2F14-4C6C-8F0E-A2F6F351C759}
 		{268AF69E-3A75-4296-886E-A16EC736AE17} = {626D9E9D-AF3E-49CC-BC7E-1E446DA9FA23}
 		{9A33CCAE-BE9C-407E-8D01-2F4CA2CC33D6} = {626D9E9D-AF3E-49CC-BC7E-1E446DA9FA23}
+		{5AEE2E1A-F312-49C7-BC4E-1DAADEB3C0CC} = {626D9E9D-AF3E-49CC-BC7E-1E446DA9FA23}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6633BB6-C186-4F6D-A4DD-E73AA04875DB}
