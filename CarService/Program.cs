@@ -32,8 +32,8 @@ namespace CarService
         {
             _penaltyPrice = 5000;
             _balance = balance;
-            _details = CreateDetails();
-            _clients = CreateClients();
+            CreateDetails();
+            CreateClients();
         }
 
         public void Work()
@@ -175,7 +175,7 @@ namespace CarService
             return false;
         }
 
-        private List<Detail> CreateDetails()
+        private void CreateDetails()
         {
             _details.Add(new Engine());
             _details.Add(new Battery());
@@ -184,19 +184,15 @@ namespace CarService
             _details.Add(new BrakePads());
             _details.Add(new Transmission());
             _details.Add(new Clutch());
-
-            return _details;
         }
 
-        private Queue<Client> CreateClients()
+        private void CreateClients()
         {
             _clients.Enqueue(new Client(new Car("Волга", "Двигатель", 50000), 30000));
             _clients.Enqueue(new Client(new Car("Тойота", "Коробка передач", 20000), 13000));
             _clients.Enqueue(new Client(new Car("Рено", "Тормозные колодки",15000 ), 18000));
             _clients.Enqueue(new Client(new Car("Шкода", "Сцепление",20000 ), 40000));
             _clients.Enqueue(new Client(new Car("Лада", "Аккумулятор", 7000), 20000));
-
-            return _clients;
         }
     }
 
