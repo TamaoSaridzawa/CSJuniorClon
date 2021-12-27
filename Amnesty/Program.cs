@@ -55,7 +55,7 @@ namespace Amnesty
             Console.WriteLine();
             Console.WriteLine("Список преступников после амнистии :");
 
-            _criminals = GetCriminalsAfterAmnesty();
+            Amnesty();
 
             foreach (var criminal in _criminals)
             {
@@ -63,11 +63,9 @@ namespace Amnesty
             }
         }
 
-        private List<Criminal> GetCriminalsAfterAmnesty()
+        private void Amnesty()
         {
-            _criminals.RemoveAll(criminal => criminal.Сrime.Contains( "Антиправительственное"));
-
-            return _criminals;
+            _criminals = _criminals.Where(criminal => criminal.Сrime != "Антиправительственное").ToList();
         }
 
         private void CreateCriminals()
