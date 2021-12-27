@@ -79,16 +79,12 @@ namespace AnarchyHospital
 
         private void SortAllPatientsSurname()
         {
-            var filterPatients = _patients.OrderBy(patient => patient.Surname).ToList();
-
-            ShowAllPatients(filterPatients);
+            _patients = _patients.OrderBy(patient => patient.Surname).ToList();
         }
 
         private void SortAllPatientsAge()
         {
-            var filterPatients = _patients.OrderBy(patient => patient.Age).ToList();
-
-            ShowAllPatients(filterPatients);
+            _patients = _patients.OrderBy(patient => patient.Age).ToList();
         }
 
         private void ShowPatientsWithCertainDisease()
