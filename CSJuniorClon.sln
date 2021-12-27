@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefinitionDelay", "Definiti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaponsReport", "WeaponsReport\WeaponsReport.csproj", "{53FEA664-8B56-45A0-A72B-78B09FF63DB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnificationTroops", "UnificationTroops\UnificationTroops.csproj", "{362AB627-A902-40F8-A799-B61CAA110037}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{53FEA664-8B56-45A0-A72B-78B09FF63DB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53FEA664-8B56-45A0-A72B-78B09FF63DB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53FEA664-8B56-45A0-A72B-78B09FF63DB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{362AB627-A902-40F8-A799-B61CAA110037}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{362AB627-A902-40F8-A799-B61CAA110037}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{362AB627-A902-40F8-A799-B61CAA110037}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{362AB627-A902-40F8-A799-B61CAA110037}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +179,7 @@ Global
 		{D2D0CF33-6D0C-4289-A8B8-9EA1E708FD1F} = {626D9E9D-AF3E-49CC-BC7E-1E446DA9FA23}
 		{F6FD4EDD-1C0C-41A5-85E2-58C8FEDE437D} = {626D9E9D-AF3E-49CC-BC7E-1E446DA9FA23}
 		{53FEA664-8B56-45A0-A72B-78B09FF63DB3} = {626D9E9D-AF3E-49CC-BC7E-1E446DA9FA23}
+		{362AB627-A902-40F8-A799-B61CAA110037} = {626D9E9D-AF3E-49CC-BC7E-1E446DA9FA23}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6633BB6-C186-4F6D-A4DD-E73AA04875DB}
