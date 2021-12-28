@@ -15,18 +15,21 @@ namespace UnificationTroops
 
             soildiersTwo = soildiersOne.Where(soildier => soildier.Name.ToUpper().StartsWith("Б")).Union(soildiersTwo).ToList();
 
+            soildiersOne = soildiersOne.Where(soildier => !soildier.Name.ToUpper().StartsWith("Б")).ToList();
+
+            foreach (var soildier in soildiersOne)
+            {
+                Console.WriteLine(soildier.Name);
+            }
+
+            Console.WriteLine();
+
             foreach (var soildier in soildiersTwo)
             {
                 Console.WriteLine(soildier.Name);
             }
 
-            foreach (var item in soildiersOne)
-            {
-                Console.WriteLine(item.Name);
-            }
-
             Console.ReadKey();
-
         }
     }
 
