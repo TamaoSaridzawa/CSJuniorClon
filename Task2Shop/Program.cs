@@ -108,6 +108,8 @@ namespace Task2Shop
         }
     }
 
+
+
     class Cart
     {
         private IReadOnlyList<Good> _allgoodsShop = new List<Good>();
